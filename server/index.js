@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path');
 const express = require('express');
+const serverless = require('serverless-http');
 const morgan = require('morgan'); // log requests
 const app = new express();
 const PORT = 4000;
@@ -13,6 +14,7 @@ app
   //Middleware functions
   .use(express.json())
   .use(morgan('dev'))
+  .use('/.netlify/functions/api', router)
   .use(function (req, res, next) {
     res.header(
       'Access-Control-Allow-Methods',
@@ -45,3 +47,5 @@ app.listen(PORT, (error) => {
     console.info(`==> 🌎  Listening on port ${PORT}.`);
   }
 });
+
+module.exports.handler = serverless(app);
